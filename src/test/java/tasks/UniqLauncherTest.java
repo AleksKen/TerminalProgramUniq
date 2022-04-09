@@ -39,7 +39,7 @@ public class UniqLauncherTest {
     @Test
     void testNotUniAndNotN() throws IOException {
 
-        UniqLauncher.main("-i -o testData/fileOu -c testData/fileIn".trim().split(" "));
+        UniqLauncher.main("-i -c testData/fileIn -o testData/fileOu".trim().split(" "));
 
         Scanner scEx = new Scanner(new FileReader("testData/fileExNotUniN"));
         Scanner scOu = new Scanner(new FileReader("testData/fileOu"));

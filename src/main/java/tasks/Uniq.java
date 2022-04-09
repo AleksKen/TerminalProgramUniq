@@ -1,6 +1,7 @@
 package tasks;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -77,65 +78,36 @@ public class Uniq {
 
     //вывод в файл или на консоль
     public void writerOutput() {
-        if (outputFileName != null) {
-            try (PrintWriter pw = new PrintWriter(outputFileName)) {
-                File outFile = new File(outputFileName);
-                if (!outFile.exists()) {
-                    boolean fileCreated = outFile.createNewFile();
-                    if (!fileCreated) {
-                        throw new IOException();
-                    }
-                }
-                for (PrefixAndStr prefixAndStr : arr) {
-                    if (unique) {
-                        if (prefixAndStr.getPref() == 1) {
-                            if (prefix) {
-                                if (prefixAndStr.getStr().isEmpty())
-                                    pw.println(prefixAndStr.getPref());
-                                else
-                                    pw.println(prefixAndStr.getPref() + " " + prefixAndStr.getStr());
-                            } else {
-                                pw.println(prefixAndStr.getStr());
-                            }
-                        }
-                    } else {
-                        if (prefix) {
-                            if (prefixAndStr.getStr().isEmpty())
-                                pw.println(prefixAndStr.getPref());
-                            else
-                                pw.println(prefixAndStr.getPref() + " " + prefixAndStr.getStr());
-                        } else {
-                            pw.println(prefixAndStr.getStr());
-                        }
-                    }
-                }
+        PrintWriter pw = new PrintWriter(System.out);
+        if (outputFileName != null)
+            try {
+                pw = new PrintWriter(outputFileName);
             } catch (IOException e) {
                 System.out.println("ошибка" + e);
             }
-        } else {
-            for (PrefixAndStr prefixAndStr : arr) {
-                if (unique) {
-                    if (prefixAndStr.getPref() == 1) {
-                        if (prefix) {
-                            if (prefixAndStr.getStr().isEmpty())
-                                System.out.println(prefixAndStr.getPref());
-                            else
-                                System.out.println(prefixAndStr.getPref() + " " + prefixAndStr.getStr());
-                        } else {
-                            System.out.println(prefixAndStr.getStr());
-                        }
-                    }
-                } else {
+        for (PrefixAndStr prefixAndStr : arr) {
+            if (unique) {
+                if (prefixAndStr.getPref() == 1) {
                     if (prefix) {
                         if (prefixAndStr.getStr().isEmpty())
-                            System.out.println(prefixAndStr.getPref());
+                            pw.println(prefixAndStr.getPref());
                         else
-                            System.out.println(prefixAndStr.getPref() + " " + prefixAndStr.getStr());
+                            pw.println(prefixAndStr.getPref() + " " + prefixAndStr.getStr());
                     } else {
-                        System.out.println(prefixAndStr.getStr());
+                        pw.println(prefixAndStr.getStr());
                     }
+                }
+            } else {
+                if (prefix) {
+                    if (prefixAndStr.getStr().isEmpty())
+                        pw.println(prefixAndStr.getPref());
+                    else
+                        pw.println(prefixAndStr.getPref() + " " + prefixAndStr.getStr());
+                } else {
+                    pw.println(prefixAndStr.getStr());
                 }
             }
         }
+        pw.close();
     }
 }
