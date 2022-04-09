@@ -90,14 +90,20 @@ public class Uniq {
                     if (unique) {
                         if (prefixAndStr.getPref() == 1) {
                             if (prefix) {
-                                pw.println(prefixAndStr.getPref() + " " + prefixAndStr.getStr());
+                                if (prefixAndStr.getStr().isEmpty())
+                                    pw.println(prefixAndStr.getPref());
+                                else
+                                    pw.println(prefixAndStr.getPref() + " " + prefixAndStr.getStr());
                             } else {
                                 pw.println(prefixAndStr.getStr());
                             }
                         }
                     } else {
                         if (prefix) {
-                            pw.println(prefixAndStr.getPref() + " " + prefixAndStr.getStr());
+                            if (prefixAndStr.getStr().isEmpty())
+                                pw.println(prefixAndStr.getPref());
+                            else
+                                pw.println(prefixAndStr.getPref() + " " + prefixAndStr.getStr());
                         } else {
                             pw.println(prefixAndStr.getStr());
                         }
@@ -111,14 +117,20 @@ public class Uniq {
                 if (unique) {
                     if (prefixAndStr.getPref() == 1) {
                         if (prefix) {
-                            System.out.println(prefixAndStr.getPref() + " " + prefixAndStr.getStr());
+                            if (prefixAndStr.getStr().isEmpty())
+                                System.out.println(prefixAndStr.getPref());
+                            else
+                                System.out.println(prefixAndStr.getPref() + " " + prefixAndStr.getStr());
                         } else {
                             System.out.println(prefixAndStr.getStr());
                         }
                     }
                 } else {
                     if (prefix) {
-                        System.out.println(prefixAndStr.getPref() + " " + prefixAndStr.getStr());
+                        if (prefixAndStr.getStr().isEmpty())
+                            System.out.println(prefixAndStr.getPref());
+                        else
+                            System.out.println(prefixAndStr.getPref() + " " + prefixAndStr.getStr());
                     } else {
                         System.out.println(prefixAndStr.getStr());
                     }
