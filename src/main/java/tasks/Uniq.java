@@ -1,7 +1,6 @@
 package tasks;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -25,10 +24,9 @@ public class Uniq {
         this.inputFileName = inputFileName;
     }
 
-    private final ArrayList<PrefixAndStr> arr = new ArrayList<>();
-
     //метод для получения массива из читаемых данных
-    public void fileToArrStr(Scanner sc) {
+    public ArrayList<PrefixAndStr> fileToArrStr(Scanner sc) {
+        ArrayList<PrefixAndStr> arr = new ArrayList<>();
         String curStr = sc.nextLine();
         arr.add(new PrefixAndStr(1, curStr));
         while (sc.hasNextLine()) {
@@ -56,10 +54,12 @@ public class Uniq {
                 }
             }
         }
+        return arr;
     }
 
     //попытка прочитать файл или данные с консоли
-    public void readInput(String fileName) {
+    public ArrayList<PrefixAndStr> readInput(String fileName) {
+        ArrayList<PrefixAndStr> arr = new ArrayList<>();
         if (fileName != null) {
             try (Scanner sc = new Scanner(new File(inputFileName))) {
                 File inputFile = new File(inputFileName);
@@ -69,15 +69,16 @@ public class Uniq {
                         throw new IOException();
                     }
                 }
-                fileToArrStr(sc);
+                arr = fileToArrStr(sc);
             } catch (IOException e) {
                 System.out.println("ошибка" + e);
             }
         }
+        return arr;
     }
 
     //вывод в файл или на консоль
-    public void writerOutput() {
+    public void writerOutput(ArrayList<PrefixAndStr> arr) {
         PrintWriter pw = new PrintWriter(System.out);
         if (outputFileName != null)
             try {

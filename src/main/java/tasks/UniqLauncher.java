@@ -40,7 +40,6 @@ public class UniqLauncher {
             System.err.println("неверно заданные аргументы");
         }
         Uniq uniq = new Uniq(outputFileName, register, N, unique, prefix, inputFileName);
-        uniq.readInput(inputFileName);
-        uniq.writerOutput();
+        uniq.writerOutput(uniq.readInput(inputFileName));
     }
 }
