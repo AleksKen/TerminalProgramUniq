@@ -27,17 +27,17 @@ public class UniqLauncher {
     @Argument()
     private String inputFileName;
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws CmdLineException, IOException {
         new UniqLauncher().parseArgs(args);
     }
 
-    public void parseArgs(String[] args) throws IOException {
+    public void parseArgs(String[] args) throws CmdLineException, IOException {
         CmdLineParser uniqLauncher = new CmdLineParser(this);
         try {
             uniqLauncher.parseArgument(args);
         } catch (CmdLineException e) {
             System.err.println(e.getMessage());
-            System.err.println("неверно заданные аргументы");
+            throw new CmdLineException("неверно заданные аргументы");
         }
         Uniq uniq = new Uniq(outputFileName, register, N, unique, prefix, inputFileName);
         uniq.writerOutput(uniq.readInput(inputFileName));

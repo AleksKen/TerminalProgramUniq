@@ -1,10 +1,7 @@
 package tasks;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class Uniq {
 
@@ -25,80 +22,71 @@ public class Uniq {
     }
 
     //метод для получения массива из читаемых данных
-    public ArrayList<PrefixAndStr> fileToArrStr(Scanner sc) {
+    public ArrayList<PrefixAndStr> fileToArrStr(BufferedReader br) throws IOException {
         ArrayList<PrefixAndStr> arr = new ArrayList<>();
-        String curStr = sc.nextLine();
-        arr.add(new PrefixAndStr(1, curStr));
-        while (sc.hasNextLine()) {
-            curStr = sc.nextLine();
-            if (curStr.isEmpty()) {
-                if (arr.get(arr.size() - 1).getStr().isEmpty()) {
-                    arr.add(new PrefixAndStr(arr.get(arr.size() - 1).getPref() + 1, arr.get(arr.size() - 1).getStr()));
-                    arr.remove(arr.size() - 2);
+        if (!(br.ready())) {
+            throw new IOException("IOException");
+        }
+        String curStr = br.readLine();
+        PrefixAndStr curState = new PrefixAndStr(1, curStr);
+        while (br.ready()) {
+            curStr = br.readLine();
+            if (register) {
+                if (N <= curStr.length()) {
+                    if (curStr.substring(N).equalsIgnoreCase(curState.getStr().substring(N))) {
+                        curState = new PrefixAndStr(curState.getPref() + 1, curState.getStr());
+                    } else {
+                        arr.add(curState);
+                        curState = new PrefixAndStr(1, curStr);
+                    }
                 } else {
-                    arr.add(new PrefixAndStr(1, curStr));
+                    curState = new PrefixAndStr(curState.getPref() + 1, curState.getStr());
                 }
             } else {
-                if (register) {
-                    if (curStr.substring(N).equalsIgnoreCase(arr.get(arr.size() - 1).getStr().substring(N))) {
-                        arr.add(new PrefixAndStr(arr.get(arr.size() - 1).getPref() + 1, arr.get(arr.size() - 1).getStr()));
-                        arr.remove(arr.size() - 2);
-                    } else
-                        arr.add(new PrefixAndStr(1, curStr));
+                if (N <= curStr.length()) {
+                    if (curStr.substring(N).equals(curState.getStr().substring(N))) {
+                        curState = new PrefixAndStr(curState.getPref() + 1, curState.getStr());
+                    } else {
+                        arr.add(curState);
+                        curState = new PrefixAndStr(1, curStr);
+                    }
                 } else {
-                    if (curStr.substring(N).equals(arr.get(arr.size() - 1).getStr().substring(N))) {
-                        arr.add(new PrefixAndStr(arr.get(arr.size() - 1).getPref() + 1, arr.get(arr.size() - 1).getStr()));
-                        arr.remove(arr.size() - 2);
-                    } else
-                        arr.add(new PrefixAndStr(1, curStr));
+                    curState = new PrefixAndStr(curState.getPref() + 1, curState.getStr());
                 }
             }
         }
+        if ((arr.isEmpty()) || (!(arr.get(arr.size() - 1).equals(curState))))
+            arr.add(curState);
         return arr;
     }
 
     //попытка прочитать файл или данные с консоли
-    public ArrayList<PrefixAndStr> readInput(String fileName) {
-        ArrayList<PrefixAndStr> arr = new ArrayList<>();
+    public ArrayList<PrefixAndStr> readInput(String fileName) throws IOException {
+        ArrayList<PrefixAndStr> arr;
         if (fileName != null) {
-            try (Scanner sc = new Scanner(new File(inputFileName))) {
-                File inputFile = new File(inputFileName);
-                if (!(inputFile.exists())) {
-                    boolean fileCreated = inputFile.createNewFile();
-                    if (!fileCreated) {
-                        throw new IOException();
-                    }
-                }
-                arr = fileToArrStr(sc);
+            try (BufferedReader br = new BufferedReader(new FileReader(inputFileName))) {
+                arr = fileToArrStr(br);
             } catch (IOException e) {
-                System.out.println("ошибка" + e);
+                throw new IOException("IOException");
             }
+        } else {
+            BufferedReader sc = new BufferedReader(new InputStreamReader(System.in));
+            arr = fileToArrStr(sc);
         }
         return arr;
     }
 
     //вывод в файл или на консоль
-    public void writerOutput(ArrayList<PrefixAndStr> arr) {
+    public void writerOutput(ArrayList<PrefixAndStr> arr) throws IOException {
         PrintWriter pw = new PrintWriter(System.out);
         if (outputFileName != null)
             try {
                 pw = new PrintWriter(outputFileName);
             } catch (IOException e) {
-                System.out.println("ошибка" + e);
+                throw new IOException("IOException");
             }
         for (PrefixAndStr prefixAndStr : arr) {
-            if (unique) {
-                if (prefixAndStr.getPref() == 1) {
-                    if (prefix) {
-                        if (prefixAndStr.getStr().isEmpty())
-                            pw.println(prefixAndStr.getPref());
-                        else
-                            pw.println(prefixAndStr.getPref() + " " + prefixAndStr.getStr());
-                    } else {
-                        pw.println(prefixAndStr.getStr());
-                    }
-                }
-            } else {
+            if ((!unique) || (prefixAndStr.getPref() == 1)) {
                 if (prefix) {
                     if (prefixAndStr.getStr().isEmpty())
                         pw.println(prefixAndStr.getPref());
